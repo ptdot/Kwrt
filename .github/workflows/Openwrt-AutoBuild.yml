@@ -9,6 +9,12 @@
 name: Build OpenWrt
 
 on: 
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Target biên dịch'
+        required: true
+        default: 'qualcommax_ipq60xx'
   repository_dispatch:
 
 env:
@@ -31,7 +37,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: ["${{ github.event.client_payload.target }}"]
+        target: ["${{ github.event.inputs.target || github.event.client_payload.target }}"]
         
     steps:
     - name: Checkout
