@@ -63,7 +63,8 @@ jobs:
         echo "DIY_SH=${DIY_SH}" >> $GITHUB_ENV
         echo "FREE_UP_DISK=${FREE_UP_DISK}" >> $GITHUB_ENV
         echo "UPLOAD_BIN_DIR_FOR_ARTIFACT=${UPLOAD_BIN_DIR_FOR_ARTIFACT}" >> $GITHUB_ENV
-        echo "UPLOAD_FIRMWARE_FOR_ARTIFACT=${UPLOAD_FIRMWARE_FOR_ARTIFACT}" >> $GITHUB_ENV
+        # Sửa dòng dưới đây thành 'true' thay vì lấy từ biến $UPLOAD_FIRMWARE_FOR_ARTIFACT
+        echo "UPLOAD_FIRMWARE_FOR_ARTIFACT=true" >> $GITHUB_ENV
         echo "UPLOAD_FIRMWARE_FOR_RELEASE=${UPLOAD_FIRMWARE_FOR_RELEASE}" >> $GITHUB_ENV
         echo "UPLOAD_FIRMWARE_TO_COWTRANSFER=${UPLOAD_FIRMWARE_TO_COWTRANSFER}" >> $GITHUB_ENV
         echo "UPLOAD_FIRMWARE_TO_WETRANSFER=${UPLOAD_FIRMWARE_TO_WETRANSFER}" >> $GITHUB_ENV
@@ -269,7 +270,7 @@ jobs:
         TARGET: "/www/wwwroot/dl.openwrt.ai/releases/tmp/"
 
     - name: Upload firmware for artifact
-      uses: actions/upload-artifact@main
+      uses: actions/upload-artifact@v4
       if: env.UPLOAD_FIRMWARE_FOR_ARTIFACT == 'true'
       with:
         name: ${{ env.VERSION }}_${{matrix.target}}
