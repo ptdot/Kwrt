@@ -17,7 +17,10 @@ rm -rf feeds/kiddin9/shortcut-fe
 git clone https://github.com/qosmio/nss-packages.git package/nss-packages
 git clone https://github.com/qosmio/sqm-scripts-nss.git package/sqm-scripts-nss
 
-sed -i "/ECM_INTERFACE_RAWIP_ENABLE/d"  package/nss-packages/qca-nss-ecm/Makefile
+sed -i "/ECM_INTERFACE_RAWIP_ENABLE/d" package/nss-packages/qca-nss-ecm/Makefile
 rm -rf package/nss-packages/nss-userspace-oss
 
 sed -i "s/luci uboot-envtools wpad-openssl/luci uboot-envtools wpad-mbedtls/" target/linux/qualcommax/Makefile
+
+# Ép chọn Profile JDCloud RE-SS-01 khi tạo file cấu hình
+echo "CONFIG_TARGET_qualcommax_ipq60xx_DEVICE_jdcloud_re-ss-01=y" >> .config
