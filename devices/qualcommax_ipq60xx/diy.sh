@@ -26,11 +26,22 @@ sed -i "s/luci uboot-envtools wpad-openssl/luci uboot-envtools wpad-mbedtls/" ta
 
 echo "CONFIG_TARGET_qualcommax_ipq60xx_DEVICE_jdcloud_re-ss-01=y" >> .config
 
-# Xóa gói cũ bị lỗi
-rm -rf feeds/kiddin9/v2ray-plugin
-rm -rf package/feeds/kiddin9/v2ray-plugin
+#!/bin/bash
 
-rm -rf feeds/kiddin9/geoview package/feeds/kiddin9/geoview
-rm -rf feeds/kiddin9/v2ray-geoip package/feeds/kiddin9/v2ray-geoip
-rm -rf feeds/kiddin9/v2ray-geosite package/feeds/kiddin9/v2ray-geosite
-rm -rf tmp/
+# 1. Xóa sạch mã nguồn các gói không dùng khỏi feeds và package
+rm -rf feeds/*/v2ray-plugin package/feeds/*/v2ray-plugin package/v2ray-plugin
+rm -rf feeds/*/geoview package/feeds/*/geoview package/geoview
+rm -rf feeds/*/v2ray-geoip package/feeds/*/v2ray-geoip package/v2ray-geoip
+rm -rf feeds/*/v2ray-geosite package/feeds/*/v2ray-geosite package/v2ray-geosite
+rm -rf feeds/*/sing-box package/feeds/*/sing-box package/sing-box
+
+# 2. Lọc bỏ sạch sẽ phụ thuộc (dependency) liên quan trong tất cả các Makefile
+find package/ feeds/ -type f -name "Makefile" -exec sed -i \
+    -e '/v2ray-plugin/d' \
+    -e '/geoview/d' \
+    -e '/v2ray-geoip/d' \
+    -e '/v2ray-geosite/d' \
+    -e '/sing-box/d' {} +
+
+# 3. Làm sạch cache cấu hình cũ
+rm -rf tmp/ .config*
