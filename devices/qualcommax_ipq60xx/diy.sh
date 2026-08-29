@@ -16,6 +16,7 @@ rm -rf feeds/kiddin9/shortcut-fe
 
 git clone https://github.com/qosmio/nss-packages.git package/nss-packages
 git clone https://github.com/qosmio/sqm-scripts-nss.git package/sqm-scripts-nss
+git clone https://github.com/amnezia-vpn/amneziawg-openwrt.git package/amneziawg-openwrt
 
 sed -i "/ECM_INTERFACE_RAWIP_ENABLE/d" package/nss-packages/qca-nss-ecm/Makefile
 rm -rf package/nss-packages/nss-userspace-oss
@@ -24,6 +25,4 @@ sed -i "s/luci uboot-envtools wpad-openssl/luci uboot-envtools wpad-mbedtls/" ta
 
 
 echo "CONFIG_TARGET_qualcommax_ipq60xx_DEVICE_jdcloud_re-ss-01=y" >> .config
-grep -q "amneziawg" feeds.conf.default || echo 'src-git amneziawg https://github.com/Slava-Shchipunov/awg-openwrt.git' >> feeds.conf.default
-./scripts/feeds update amneziawg
-./scripts/feeds install -a -p amneziawg
+
