@@ -26,3 +26,10 @@ sed -i "s/luci uboot-envtools wpad-openssl/luci uboot-envtools wpad-mbedtls/" ta
 
 echo "CONFIG_TARGET_qualcommax_ipq60xx_DEVICE_jdcloud_re-ss-01=y" >> .config
 
+# Xóa sạch package v2ray-plugin khỏi feeds và package
+rm -rf feeds/kiddin9/v2ray-plugin
+rm -rf feeds/packages/net/v2ray-plugin
+rm -rf package/feeds/kiddin9/v2ray-plugin
+
+# Thay thế hoặc xóa bỏ khai báo dependency v2ray-plugin trong Passwall
+find package/ feeds/ -type f -name "Makefile" -exec sed -i '/v2ray-plugin/d' {} +
