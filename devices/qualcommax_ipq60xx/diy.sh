@@ -27,4 +27,4 @@ sed -i "s/luci uboot-envtools wpad-openssl/luci uboot-envtools wpad-mbedtls/" ta
 echo "CONFIG_TARGET_qualcommax_ipq60xx_DEVICE_jdcloud_re-ss-01=y" >> .config
 
 # Sửa Makefile của v2ray-plugin nếu tồn tại trong feeds
-find feeds/ package/ -name "Makefile" | xargs grep -l "v2ray-plugin" | xargs sed -i 's#GO_BUILD_PKG:=github.com/shadowsocks/v2ray-plugin$#GO_BUILD_PKG:=github.com/shadowsocks/v2ray-plugin/.#g'
+find feeds/ package/ -path "*/v2ray-plugin/Makefile" | xargs sed -i 's/GO_BUILDFLAGS:=/GO_BUILDFLAGS:=-buildvcs=false /g'
