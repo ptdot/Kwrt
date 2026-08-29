@@ -216,7 +216,23 @@ jobs:
         df -hT
         cd openwrt
         echo -e "$(($(nproc)+1)) thread compile"
-        make -j$(($(nproc)+1)) || { log=$(mktemp);make V=s &>$log; } || { tail -50 $log; curl -k --data chat_id="${{ env.TELEGRAM_CHAT_ID }}" --data "text=❌ OpenWrt ${{ env.VERSION }} ${{matrix.target}} 编译失败 😂" "https://api.telegram.org/bot${{ env.TELEGRAM_TOKEN }}/sendMessage";df -hT;exit 1; }
+        
+        # Thêm biến môi trường ép Go không bị treo khi fetch module
+        export GO111MODULE=on
+        export GOPROXY=https://goproxy.cn,direct
+
+        # Lần 1: Chạy đa luồng
+        make -j$(($(nproc)+1)) || {
+          echo "Build đa luồng thất bại, chuyển sang đơn luồng (V=s)..."
+          log=$(mktemp)
+          # Lần 2: Chạy đơn luồng và in trực tiếp ra console thay vì giấu vào file temp
+          make -j1 V=s
+        } || {
+          echo "❌ Build thất bại!"
+          df -hT
+          exit 1
+        }
+
         rm -rf staging_dir/toolchain-*/bin/*openwrt-linux-musl-lto-dump
         rm -rf staging_dir/toolchain-*/initial
         df -hT
