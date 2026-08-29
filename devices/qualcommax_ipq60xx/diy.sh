@@ -30,7 +30,12 @@ echo "CONFIG_TARGET_qualcommax_ipq60xx_DEVICE_jdcloud_re-ss-01=y" >> .config
 rm -rf feeds/kiddin9/v2ray-plugin
 rm -rf package/feeds/kiddin9/v2ray-plugin
 
-# Lấy bản v2ray-plugin đã fix Makefile cho Go mới
-git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages package/passwall-pkgs-temp
-mv package/passwall-pkgs-temp/v2ray-plugin package/v2ray-plugin
-rm -rf package/passwall-pkgs-temp
+# Sửa lỗi Makefile của v2ray-plugin cho Passwall2 (tương thích Golang mới)
+find package/ feeds/ -path "*/v2ray-plugin/Makefile" 2>/dev/null | while read mk; do
+    # Thêm cờ bỏ qua kiểm tra VCS của git để tránh lỗi exit status 128
+    if ! grep -q "buildvcs=false" "$mk"; then
+        sed -i 's/GO_BUILDFLAGS:=/GO_BUILDFLAGS:=-buildvcs=false /g' "$mk"
+    fi
+    # Sửa đường dẫn build pkg nếu bị lỗi không tìm thấy file go
+    sed -i 's#GO_BUILD_PKG:=github.com/shadowsocks/v2ray-plugin$#GO_BUILD_PKG:=github.com/shadowsocks/v2ray-plugin/.#g' "$mk"
+done
