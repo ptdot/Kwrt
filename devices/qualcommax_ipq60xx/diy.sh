@@ -30,12 +30,7 @@ echo "CONFIG_TARGET_qualcommax_ipq60xx_DEVICE_jdcloud_re-ss-01=y" >> .config
 rm -rf feeds/kiddin9/v2ray-plugin
 rm -rf package/feeds/kiddin9/v2ray-plugin
 
-# Sửa lỗi Makefile của v2ray-plugin cho Passwall2 (tương thích Golang mới)
-find package/ feeds/ -path "*/v2ray-plugin/Makefile" 2>/dev/null | while read mk; do
-    # Thêm cờ bỏ qua kiểm tra VCS của git để tránh lỗi exit status 128
-    if ! grep -q "buildvcs=false" "$mk"; then
-        sed -i 's/GO_BUILDFLAGS:=/GO_BUILDFLAGS:=-buildvcs=false /g' "$mk"
-    fi
-    # Sửa đường dẫn build pkg nếu bị lỗi không tìm thấy file go
-    sed -i 's#GO_BUILD_PKG:=github.com/shadowsocks/v2ray-plugin$#GO_BUILD_PKG:=github.com/shadowsocks/v2ray-plugin/.#g' "$mk"
-done
+rm -rf feeds/kiddin9/geoview package/feeds/kiddin9/geoview
+rm -rf feeds/kiddin9/v2ray-geoip package/feeds/kiddin9/v2ray-geoip
+rm -rf feeds/kiddin9/v2ray-geosite package/feeds/kiddin9/v2ray-geosite
+rm -rf tmp/
