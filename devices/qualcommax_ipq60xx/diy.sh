@@ -25,3 +25,4 @@ sed -i "s/luci uboot-envtools wpad-openssl/luci uboot-envtools wpad-mbedtls/" ta
 echo 'src-git amneziawg https://github.com/Slava-Shchipunov/awg-openwrt.git' >> feeds.conf.default
 
 echo "CONFIG_TARGET_qualcommax_ipq60xx_DEVICE_jdcloud_re-ss-01=y" >> .config
+echo 'src-git amneziawg https://github.com/amnezia-vpn/amneziawg-openwrt.git' >> feeds.conf.default
