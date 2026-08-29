@@ -28,20 +28,42 @@ echo "CONFIG_TARGET_qualcommax_ipq60xx_DEVICE_jdcloud_re-ss-01=y" >> .config
 
 #!/bin/bash
 
-# 1. Xóa sạch mã nguồn các gói không dùng khỏi feeds và package
-rm -rf feeds/*/v2ray-plugin package/feeds/*/v2ray-plugin package/v2ray-plugin
-rm -rf feeds/*/geoview package/feeds/*/geoview package/geoview
-rm -rf feeds/*/v2ray-geoip package/feeds/*/v2ray-geoip package/v2ray-geoip
-rm -rf feeds/*/v2ray-geosite package/feeds/*/v2ray-geosite package/v2ray-geosite
-rm -rf feeds/*/sing-box package/feeds/*/sing-box package/sing-box
+#!/bin/bash
 
-# 2. Lọc bỏ sạch sẽ phụ thuộc (dependency) liên quan trong tất cả các Makefile
+# =========================================================
+# 1. XÓA TẬN GỐC CÁC GÓI GÂY LỖI KCONFIG & RECURSIVE DEPENDENCY
+# =========================================================
+# Xóa NekoBox (gây lỗi PHP8_INTL)
+rm -rf feeds/*/luci-app-nekobox package/feeds/*/luci-app-nekobox
+rm -rf feeds/*/nekobox package/feeds/*/nekobox
+
+# Xóa ipsec-server (gây lỗi vòng lặp ppp)
+rm -rf feeds/*/luci-app-ipsec-server package/feeds/*/luci-app-ipsec-server
+
+# Xóa triệt để các gói Geoview / V2ray / Sing-box không dùng
+rm -rf feeds/*/v2ray-plugin package/feeds/*/v2ray-plugin
+rm -rf feeds/*/geoview package/feeds/*/geoview
+rm -rf feeds/*/v2ray-geoip package/feeds/*/v2ray-geoip
+rm -rf feeds/*/v2ray-geosite package/feeds/*/v2ray-geosite
+rm -rf feeds/*/sing-box package/feeds/*/sing-box
+
+# =========================================================
+# 2. XÓA KHAI BÁO DEPENDENCY TRONG TẤT CẢ MAKEFILE
+# =========================================================
 find package/ feeds/ -type f -name "Makefile" -exec sed -i \
+    -e '/luci-app-nekobox/d' \
+    -e '/luci-app-ipsec-server/d' \
     -e '/v2ray-plugin/d' \
     -e '/geoview/d' \
     -e '/v2ray-geoip/d' \
     -e '/v2ray-geosite/d' \
     -e '/sing-box/d' {} +
 
-# 3. Làm sạch cache cấu hình cũ
-rm -rf tmp/ .config*
+# =========================================================
+# 3. LÀM SẠCH CACHE VÀ CẬP NHẬT LẠI FEEDS INDEX
+# =========================================================
+# Xóa cache tmp cũ để ép OpenWrt tạo lại tmp/.config-package.in sạch
+rm -rf tmp/
+
+# Cài đặt lại chỉ mục feeds sau khi đã dọn rác
+./scripts/feeds install -a
