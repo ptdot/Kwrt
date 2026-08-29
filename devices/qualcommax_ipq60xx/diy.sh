@@ -26,5 +26,11 @@ sed -i "s/luci uboot-envtools wpad-openssl/luci uboot-envtools wpad-mbedtls/" ta
 
 echo "CONFIG_TARGET_qualcommax_ipq60xx_DEVICE_jdcloud_re-ss-01=y" >> .config
 
-# Sửa Makefile của v2ray-plugin nếu tồn tại trong feeds
-find feeds/ package/ -path "*/v2ray-plugin/Makefile" | xargs sed -i 's/GO_BUILDFLAGS:=/GO_BUILDFLAGS:=-buildvcs=false /g'
+# Xóa gói cũ bị lỗi
+rm -rf feeds/kiddin9/v2ray-plugin
+rm -rf package/feeds/kiddin9/v2ray-plugin
+
+# Lấy bản v2ray-plugin đã fix Makefile cho Go mới
+git clone --depth=1 https://github.com/xiaorouji/openwrt-passwall-packages package/passwall-pkgs-temp
+mv package/passwall-pkgs-temp/v2ray-plugin package/v2ray-plugin
+rm -rf package/passwall-pkgs-temp
